@@ -1,0 +1,6 @@
+@readiness_HostAddress = http://localhost:5000
+
+GET {{readiness_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
