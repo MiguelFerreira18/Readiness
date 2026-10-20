@@ -1,0 +1,73 @@
+@startuml
+
+enum Role{
+MODERATOR,
+AUTHOR,
+USER
+}
+enum Category{
+  FANTASY,
+  SCI-FI,
+  ROMANCE,
+  CLASSIC,
+  ADVENTURE,
+  HISTORIC,
+  MANGA,
+  COMIC
+  }
+class User{
+  Long id
+  Role role
+  String email
+  String name
+  int yearOfBirth
+  String passwordHash
+}
+class Review{
+  Long id
+  String review
+  int star
+  Book book
+  User user
+  float timeToRead
+  DateTime dateOfReview
+}
+class Book{
+  Long id
+  String name
+  String summary
+  String author
+  String publisher
+  int yearOfRelease
+  int numberOfPage
+  Long isbn
+}
+class BookCategory{
+  Long id
+  Book book
+  Category category
+}
+class BookList{
+  Long id
+  Book book
+  User user
+}
+class Wishlist{
+  Long id
+  Book book
+  User user
+}
+
+
+
+Role --* User
+User --* Review
+Book --* BookCategory
+Category --* BookCategory
+Wishlist --* Book
+User --* BookList
+Book --* User
+
+
+
+@enduml
