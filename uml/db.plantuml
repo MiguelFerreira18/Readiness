@@ -1,3 +1,9 @@
+
+@enduml
+
+
+@enduml
+
 @startuml
 
 enum Role{
@@ -65,8 +71,10 @@ User --* Review
 Book --* BookCategory
 Category --* BookCategory
 Wishlist --* Book
+User --* Wishlist
 User --* BookList
 Book --* User
+Book --*BookList
 
 
 
