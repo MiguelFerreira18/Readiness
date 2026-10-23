@@ -1,9 +1,3 @@
-
-@enduml
-
-
-@enduml
-
 @startuml
 
 enum Role{

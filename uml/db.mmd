@@ -1,0 +1,71 @@
+---
+title: readiness_db
+---
+erDiagram
+
+        Role ||--|{ User : ""
+        User ||--o{ Review : ""
+        Book ||--o{ Review : "" 
+        Book ||--|{ BookCategory : ""
+        Category ||--|{ BookCategory : ""
+        Book ||--o{ AuthorList : ""
+        User |o--o{ AuthorList : ""
+        User ||--o{ UserBook : ""
+        Book |o--o{ UserBook : ""
+        Status ||--|{ UserBook : ""
+
+        Role{
+          Long id PK
+          String role UK 
+        }
+        Category{
+          Long id PK
+          String category UK 
+        }
+        Status {
+          Long id PK
+          String status UK 
+        }
+        User{
+          Long id PK
+          String email UK
+          String name
+          int yearOfBirth
+          String passwordHash
+          Long roleId FK
+        }
+        Review{
+          Long id PK
+          String review
+          int star
+          Float timeToRead
+          DateTime dateOfReview
+          Long bookId FK
+          Long userId FK
+        }
+        Book{
+          Long id PK
+          String name
+          String summary
+          String publisher
+          int yearOfRelease
+          int numberOfPage
+          Long isbn UK
+        }
+        BookCategory{
+          Long id PK
+          Long bookId FK
+          Long categoryId FK
+        }
+        UserBook{
+          Long id PK
+          Long bookId FK
+          Long userId FK
+          Long statusId FK
+        }
+
+        AuthorList {
+          Long id PK
+          Long userId FK
+          Long bookId FK
+        }
