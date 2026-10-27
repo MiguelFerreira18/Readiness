@@ -20,7 +20,7 @@ public class User
     public string? PasswordHash { get; set; }
     
     [Required] 
-    public int RoleId { get; set; }
+    public long RoleId { get; set; }
     [ForeignKey(nameof(RoleId))]
     public Role Role { get; set; }  = null!;
 

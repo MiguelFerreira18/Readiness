@@ -20,10 +20,11 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>()
-        .Property(u => u.Role)
+        modelBuilder.Entity<Role>()
+        .Property(u => u.Type)
         .HasConversion<string>()
         .HasMaxLength(20);
+
         modelBuilder.Entity<Category>().HasData(
             new Category { Id = 1, Type =  CategoryType.Fantasy },
             new Category { Id = 2, Type = CategoryType.SciFi },
