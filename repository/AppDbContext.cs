@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using readiness.model;
 
 public class AppDbContext : DbContext
 {
@@ -10,10 +11,12 @@ public class AppDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Book> Books => Set<Book>();
     public DbSet<Category> Categories => Set<Category>();
-    public DbSet<BookCategory> BookCategorys => Set<BookCategory>();
+    public DbSet<BookCategory> BookCategories => Set<BookCategory>();
     public DbSet<Review> Reviews => Set<Review>();
-    public DbSet<BookList> BookLists => Set<BookList>();
-    public DbSet<Wishlist> Wishlists => Set<Wishlist>();
+    public DbSet<UserBook> BookLists => Set<UserBook>();
+    public DbSet<AuthorBook> AuthorBooks => Set<AuthorBook>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<Status> Status => Set<Status>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

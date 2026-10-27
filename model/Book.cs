@@ -5,6 +5,7 @@ public class Book
 {
     [Key]
     public long Id { get; set; }
+    
     [Required, MaxLength(255)]
     public string Name { get; set; } = null!;
 
@@ -14,16 +15,18 @@ public class Book
     [Required, MaxLength(150)]
     public string Author { get; set; } = null!;
 
-    [MaxLength(150)]
+    [MaxLength(150), Required]
     public string? Publisher { get; set; }
-
+    
+    [Required]
     public int YearOfRelease { get; set; }
 
-    [Range(1, int.MaxValue)]
+    [Range(1, int.MaxValue), Required]
     public int NumberOfPage { get; set; }
-
+    
+    [Required]
     public long Isbn { get; set; }
 
     public List<BookCategory> BookCategories { get; set; } = new();
-    public List<Review> reviews { get; set; } = new();
+    public List<Review> Reviews { get; set; } = new();
 }
