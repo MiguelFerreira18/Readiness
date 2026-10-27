@@ -1,6 +1,6 @@
 ﻿
 public enum UserBookType
 {
-    WISHLIST,
-    READ
+    WishList,
+    Read
 }

@@ -12,9 +12,6 @@ public class Book
     [MaxLength(4000)]
     public string? Summary { get; set; }
 
-    [Required, MaxLength(150)]
-    public string Author { get; set; } = null!;
-
     [MaxLength(150), Required]
     public string? Publisher { get; set; }
     

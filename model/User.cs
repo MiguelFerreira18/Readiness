@@ -15,6 +15,7 @@ public class User
     
     [Range(0, 2027, ErrorMessage = "Enter a valid year between 0 and 2027")]
     public int YearOfBirth { get; set; }
+    
     [Required, MaxLength(64)]
     public string? PasswordHash { get; set; }
     

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using readiness.model;
 
 public class UserBook
 {
@@ -17,4 +18,10 @@ public class UserBook
 
     [ForeignKey(nameof(UserId))]
     public User User { get; set; } = null!;
+    
+    [Required]
+    public long StatusId { get; set; }
+
+    [ForeignKey(nameof(StatusId))]
+    public Status Status { get; set; } = null!;
 }
