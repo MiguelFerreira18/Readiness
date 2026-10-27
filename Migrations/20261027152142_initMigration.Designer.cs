@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace readiness.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261020163556_InitMigration")]
-    partial class InitMigration
+    [Migration("20261027152142_initMigration")]
+    partial class initMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,6 +49,7 @@ namespace readiness.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Publisher")
+                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("varchar(150)");
 
@@ -84,30 +85,7 @@ namespace readiness.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("BookCategorys");
-                });
-
-            modelBuilder.Entity("BookList", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("BookId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BookLists");
+                    b.ToTable("BookCategories");
                 });
 
             modelBuilder.Entity("Category", b =>
@@ -187,6 +165,9 @@ namespace readiness.Migrations
                     b.Property<DateTime>("DateOfReview")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int>("Star")
                         .HasColumnType("int");
 
@@ -207,6 +188,24 @@ namespace readiness.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("Role", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("User", b =>
@@ -231,20 +230,20 @@ namespace readiness.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("varchar(64)");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                    b.Property<long>("RoleId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("YearOfBirth")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("Wishlist", b =>
+            modelBuilder.Entity("UserBook", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -264,7 +263,46 @@ namespace readiness.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Wishlists");
+                    b.ToTable("BookLists");
+                });
+
+            modelBuilder.Entity("readiness.model.AuthorBook", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("BookId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AuthorBooks");
+                });
+
+            modelBuilder.Entity("readiness.model.Status", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Status");
                 });
 
             modelBuilder.Entity("BookCategory", b =>
@@ -286,7 +324,37 @@ namespace readiness.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("BookList", b =>
+            modelBuilder.Entity("Review", b =>
+                {
+                    b.HasOne("Book", "Book")
+                        .WithMany("Reviews")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("User", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("User", b =>
+                {
+                    b.HasOne("Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("UserBook", b =>
                 {
                     b.HasOne("Book", "Book")
                         .WithMany()
@@ -305,26 +373,7 @@ namespace readiness.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Review", b =>
-                {
-                    b.HasOne("Book", "Book")
-                        .WithMany("reviews")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("User", "User")
-                        .WithMany("Reviews")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Wishlist", b =>
+            modelBuilder.Entity("readiness.model.AuthorBook", b =>
                 {
                     b.HasOne("Book", "Book")
                         .WithMany()
@@ -333,7 +382,7 @@ namespace readiness.Migrations
                         .IsRequired();
 
                     b.HasOne("User", "User")
-                        .WithMany("WishList")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -347,7 +396,7 @@ namespace readiness.Migrations
                 {
                     b.Navigation("BookCategories");
 
-                    b.Navigation("reviews");
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("User", b =>
@@ -355,8 +404,6 @@ namespace readiness.Migrations
                     b.Navigation("BookList");
 
                     b.Navigation("Reviews");
-
-                    b.Navigation("WishList");
                 });
 #pragma warning restore 612, 618
         }

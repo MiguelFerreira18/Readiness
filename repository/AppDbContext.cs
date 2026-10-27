@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using readiness.model;
 
 public class AppDbContext : DbContext
 {
@@ -10,26 +11,29 @@ public class AppDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Book> Books => Set<Book>();
     public DbSet<Category> Categories => Set<Category>();
-    public DbSet<BookCategory> BookCategorys => Set<BookCategory>();
+    public DbSet<BookCategory> BookCategories => Set<BookCategory>();
     public DbSet<Review> Reviews => Set<Review>();
-    public DbSet<BookList> BookLists => Set<BookList>();
-    public DbSet<Wishlist> Wishlists => Set<Wishlist>();
+    public DbSet<UserBook> BookLists => Set<UserBook>();
+    public DbSet<AuthorBook> AuthorBooks => Set<AuthorBook>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<Status> Status => Set<Status>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>()
-        .Property(u => u.Role)
+        modelBuilder.Entity<Role>()
+        .Property(u => u.Type)
         .HasConversion<string>()
         .HasMaxLength(20);
+
         modelBuilder.Entity<Category>().HasData(
-            new Category { Id = 1, Name = "Fantasy" },
-            new Category { Id = 2, Name = "Sci-Fi" },
-            new Category { Id = 3, Name = "Romance" },
-            new Category { Id = 4, Name = "Classic" },
-            new Category { Id = 5, Name = "Adventure" },
-            new Category { Id = 6, Name = "Historic" },
-            new Category { Id = 7, Name = "Manga" },
-            new Category { Id = 8, Name = "Comic" }
+            new Category { Id = 1, Type =  CategoryType.Fantasy },
+            new Category { Id = 2, Type = CategoryType.SciFi },
+            new Category { Id = 3, Type = CategoryType.Romance },
+            new Category { Id = 4, Type = CategoryType.Classic },
+            new Category { Id = 5, Type = CategoryType.Adventure },
+            new Category { Id = 6, Type = CategoryType.Historic },
+            new Category { Id = 7, Type = CategoryType.Manga },
+            new Category { Id = 8, Type = CategoryType.Comic }
         );
     }
 }

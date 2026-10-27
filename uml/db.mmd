@@ -8,23 +8,23 @@ erDiagram
         Book ||--o{ Review : "" 
         Book ||--|{ BookCategory : ""
         Category ||--|{ BookCategory : ""
-        Book ||--o{ AuthorList : ""
-        User |o--o{ AuthorList : ""
+        Book ||--o{ AuthorBook : ""
+        User |o--o{ AuthorBook : ""
         User ||--o{ UserBook : ""
         Book |o--o{ UserBook : ""
         Status ||--|{ UserBook : ""
 
         Role{
           Long id PK
-          String role UK 
+          String type UK 
         }
         Category{
           Long id PK
-          String category UK 
+          String type UK 
         }
         Status {
           Long id PK
-          String status UK 
+          String type UK 
         }
         User{
           Long id PK
@@ -36,10 +36,11 @@ erDiagram
         }
         Review{
           Long id PK
-          String review
+          String text
           int star
           Float timeToRead
           DateTime dateOfReview
+          Bool isDeleted
           Long bookId FK
           Long userId FK
         }
@@ -64,7 +65,7 @@ erDiagram
           Long statusId FK
         }
 
-        AuthorList {
+        AuthorBook {
           Long id PK
           Long userId FK
           Long bookId FK
