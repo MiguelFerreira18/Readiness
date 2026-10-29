@@ -3,11 +3,24 @@
 ## GoodReads look a like API
 
 ### How to run everything
+
+There are two main ways to run the Rest API, the first one with the run scripts and the second one with sequential commands
+**1) Run scripts**
+You can choose to run either depending on you operating system, the -d flag allows you to also call the docker compose file (detached from terminal)
+```bash
+./run.bat # This is for windows (ends in .bat)
+sh ./run.sh # This is for linux users (if you use git bash)
+##Docker Flag
+./run.bat -d | --d | docker
+sh ./run.sh -d | --d | docker
+```
+
+**2) Sequential commands**
 ```bash
 # First execute the docker container
 docker compose up -d # -d = detach, it simply doens't put you into a console
 # Secondly just run the dotnet API, you can either run from the editor itself, or use the cli as follows
-dotnet run # If only foor debug purposes run dotnet build, it ***WON'T*** apply the migrations
+dotnet run # If only for debug purposes run 'dotnet build', it WON'T apply the migrations
 ```
 
 #### How to stop the program with a clean db
@@ -20,7 +33,7 @@ Afterwards, you can simply re-run the program as specified before and you will h
 
 ### Precautions
 
-**DO NOT** run the following commands unless really necessary, and you should warn other people on that they were run.
+**DO NOT** run the following commands unless really necessary, and you should warn other people.
 ```bash
 dotnet ef migrations add <name of migration> ## This creates a new migration, normally they are done when there are changes on the entities for the database
 ```
