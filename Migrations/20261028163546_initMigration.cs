@@ -27,8 +27,6 @@ namespace readiness.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Summary = table.Column<string>(type: "varchar(4000)", maxLength: 4000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Author = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Publisher = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     YearOfRelease = table.Column<int>(type: "int", nullable: false),
@@ -47,8 +45,7 @@ namespace readiness.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    Type = table.Column<int>(type: "int", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -173,7 +170,8 @@ namespace readiness.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     BookId = table.Column<long>(type: "bigint", nullable: false),
-                    UserId = table.Column<long>(type: "bigint", nullable: false)
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    StatusId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -182,6 +180,12 @@ namespace readiness.Migrations
                         name: "FK_BookLists_Books_BookId",
                         column: x => x.BookId,
                         principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookLists_Status_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Status",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -205,6 +209,7 @@ namespace readiness.Migrations
                     TimeToRead = table.Column<float>(type: "float", nullable: false),
                     DateOfReview = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    wasEdited = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     BookId = table.Column<long>(type: "bigint", nullable: false),
                     UserId = table.Column<long>(type: "bigint", nullable: false)
                 },
@@ -228,17 +233,17 @@ namespace readiness.Migrations
 
             migrationBuilder.InsertData(
                 table: "Categories",
-                columns: new[] { "Id", "Name" },
+                columns: new[] { "Id", "Type" },
                 values: new object[,]
                 {
-                    { 1L, "Fantasy" },
-                    { 2L, "Sci-Fi" },
-                    { 3L, "Romance" },
-                    { 4L, "Classic" },
-                    { 5L, "Adventure" },
-                    { 6L, "Historic" },
-                    { 7L, "Manga" },
-                    { 8L, "Comic" }
+                    { 1L, 0 },
+                    { 2L, 1 },
+                    { 3L, 2 },
+                    { 4L, 3 },
+                    { 5L, 4 },
+                    { 6L, 5 },
+                    { 7L, 6 },
+                    { 8L, 7 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -267,14 +272,19 @@ namespace readiness.Migrations
                 column: "BookId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BookLists_StatusId",
+                table: "BookLists",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BookLists_UserId",
                 table: "BookLists",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_Name",
+                name: "IX_Categories_Type",
                 table: "Categories",
-                column: "Name",
+                column: "Type",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -309,10 +319,10 @@ namespace readiness.Migrations
                 name: "Reviews");
 
             migrationBuilder.DropTable(
-                name: "Status");
+                name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Status");
 
             migrationBuilder.DropTable(
                 name: "Books");

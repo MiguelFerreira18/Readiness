@@ -11,13 +11,15 @@ public class Review
 
     [Range(1, 5), Required]
     public int Star { get; set; }
-    
+
     [Required]
     public float TimeToRead { get; set; }
 
     public DateTime DateOfReview { get; set; } = DateTime.UtcNow;
 
-    public Boolean IsDeleted { get; set; } = true;
+    public Boolean IsDeleted { get; set; } = false;
+
+    public Boolean wasEdited { get; set; } = false;
 
     [Required]
     public long BookId { get; set; }
