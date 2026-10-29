@@ -294,3 +294,6 @@ __pycache__/
 
 ./readiness.Tests/obj
 ./readiness.Tests/bin
+
+TestResults/
+coveragereport/
