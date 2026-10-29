@@ -290,3 +290,7 @@ __pycache__/
 
 ./Migrations*
 ./Migrations
+
+
+./readiness.Tests/obj
+./readiness.Tests/bin

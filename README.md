@@ -73,6 +73,11 @@ dotnet reportgenerator -reports:"readiness.Tests/TestResults/**/coverage.cobertu
 The login endpoint is `POST /api/auth/login`. JWT signing keys must not be stored in `appsettings.json` or committed to source control. For local PowerShell development, generate a temporary key in the same terminal used to start the API:
 
 ```powershell
+$rng = [Security.Cryptography.RandomNumberGenerator]::Create()
+$bytes = New-Object byte[] 32
+$rng.GetBytes($bytes)
+$rng.Dispose()
+
 $env:Jwt__SigningKey = [Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
 dotnet run
 ```
