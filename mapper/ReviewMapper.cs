@@ -21,7 +21,6 @@ public static class ReviewMapper
     {
         review.Text = request.Text?.Trim();
         review.Star = request.Star;
-        review.wasEdited = true;
         review.TimeToRead = request.TimeToRead;
     }
 

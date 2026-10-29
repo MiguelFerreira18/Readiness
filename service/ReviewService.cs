@@ -44,6 +44,7 @@ public class ReviewService : IReviewService
 
         if (review is null || review.UserId != userId) return null;
 
+        review.wasEdited = true;
         request.ApplyTo(review);
         await _repository.SaveAsync();
 
