@@ -7,7 +7,7 @@ public class User
     [Key]
     public long Id { get; set; }
     
-    [Required, EmailAddress(ErrorMessage = "Invalid Email"),]
+    [Required, EmailAddress(ErrorMessage = "Invalid Email"), MaxLength(254)]
     public string? Email { get; set; }
     
     [Required, MaxLength(64)]

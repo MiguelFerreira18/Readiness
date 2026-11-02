@@ -17,6 +17,7 @@ public class AppDbContext : DbContext
     public DbSet<AuthorBook> AuthorBooks => Set<AuthorBook>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Status> Status => Set<Status>();
+    public DbSet<RevokedToken> RevokedTokens => Set<RevokedToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,6 +25,25 @@ public class AppDbContext : DbContext
         .Property(u => u.Type)
         .HasConversion<string>()
         .HasMaxLength(20);
+
+        modelBuilder.Entity<Role>().HasData(
+            new Role { Id = 1, Type = RoleType.User }
+        );
+
+        modelBuilder.Entity<User>()
+        .Property(u => u.Email)
+        .HasMaxLength(254);
+
+        modelBuilder.Entity<User>()
+        .Property(u => u.PasswordHash)
+        .HasMaxLength(256);
+
+        modelBuilder.Entity<User>()
+        .HasIndex(u => u.Email)
+        .IsUnique();
+
+        modelBuilder.Entity<Review>()
+        .HasQueryFilter(r => !r.IsDeleted);
 
         modelBuilder.Entity<Category>().HasData(
             new Category { Id = 1, Type =  CategoryType.Fantasy },

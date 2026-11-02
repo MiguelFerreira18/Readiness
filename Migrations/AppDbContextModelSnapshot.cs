@@ -29,11 +29,6 @@ namespace readiness.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Author")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)");
-
                     b.Property<long>("Isbn")
                         .HasColumnType("bigint");
 
@@ -93,14 +88,13 @@ namespace readiness.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<int>("Type")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("Type")
                         .IsUnique();
 
                     b.ToTable("Categories");
@@ -109,42 +103,42 @@ namespace readiness.Migrations
                         new
                         {
                             Id = 1L,
-                            Name = "Fantasy"
+                            Type = 0
                         },
                         new
                         {
                             Id = 2L,
-                            Name = "Sci-Fi"
+                            Type = 1
                         },
                         new
                         {
                             Id = 3L,
-                            Name = "Romance"
+                            Type = 2
                         },
                         new
                         {
                             Id = 4L,
-                            Name = "Classic"
+                            Type = 3
                         },
                         new
                         {
                             Id = 5L,
-                            Name = "Adventure"
+                            Type = 4
                         },
                         new
                         {
                             Id = 6L,
-                            Name = "Historic"
+                            Type = 5
                         },
                         new
                         {
                             Id = 7L,
-                            Name = "Manga"
+                            Type = 6
                         },
                         new
                         {
                             Id = 8L,
-                            Name = "Comic"
+                            Type = 7
                         });
                 });
 
@@ -178,6 +172,9 @@ namespace readiness.Migrations
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
+                    b.Property<bool>("wasEdited")
+                        .HasColumnType("tinyint(1)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BookId");
@@ -185,6 +182,20 @@ namespace readiness.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("RevokedToken", b =>
+                {
+                    b.Property<string>("TokenId")
+                        .HasMaxLength(36)
+                        .HasColumnType("varchar(36)");
+
+                    b.Property<DateTime>("ExpiresAtUtc")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("TokenId");
+
+                    b.ToTable("RevokedTokens");
                 });
 
             modelBuilder.Entity("Role", b =>
@@ -203,6 +214,13 @@ namespace readiness.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Role");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Type = "User"
+                        });
                 });
 
             modelBuilder.Entity("User", b =>
@@ -215,7 +233,8 @@ namespace readiness.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(254)
+                        .HasColumnType("varchar(254)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -224,8 +243,8 @@ namespace readiness.Migrations
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("varchar(64)");
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<long>("RoleId")
                         .HasColumnType("bigint");
@@ -234,6 +253,9 @@ namespace readiness.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.HasIndex("RoleId");
 
@@ -251,12 +273,17 @@ namespace readiness.Migrations
                     b.Property<long>("BookId")
                         .HasColumnType("bigint");
 
+                    b.Property<long>("StatusId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BookId");
+
+                    b.HasIndex("StatusId");
 
                     b.HasIndex("UserId");
 
@@ -359,6 +386,12 @@ namespace readiness.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("readiness.model.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("User", "User")
                         .WithMany("BookList")
                         .HasForeignKey("UserId")
@@ -366,6 +399,8 @@ namespace readiness.Migrations
                         .IsRequired();
 
                     b.Navigation("Book");
+
+                    b.Navigation("Status");
 
                     b.Navigation("User");
                 });
