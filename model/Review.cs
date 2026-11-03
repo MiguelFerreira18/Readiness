@@ -9,7 +9,7 @@ public class Review
     [MaxLength(4000)]
     public string? Text { get; set; }
 
-    [Range(1, 5), Required]
+    [Range(0, 5), Required]
     public int Star { get; set; }
 
     [Required]
