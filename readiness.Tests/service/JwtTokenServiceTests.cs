@@ -21,7 +21,7 @@ public class JwtTokenServiceTests
             Id = 42,
             Email = "reader@example.com",
             Name = "Reader",
-            Role = new Role { Id = 1, Type = RoleType.User }
+            Role = Role.User
         };
         var service = new JwtTokenService(settings);
 
@@ -47,7 +47,7 @@ public class JwtTokenServiceTests
         Assert.Equal("42", principal.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         Assert.Equal("reader@example.com", principal.FindFirst(ClaimTypes.Email)?.Value);
         Assert.Equal("Reader", principal.FindFirst(ClaimTypes.Name)?.Value);
-        Assert.Equal(RoleType.User.ToString(), principal.FindFirst(ClaimTypes.Role)?.Value);
+        Assert.Equal(Role.User.ToString(), principal.FindFirst(ClaimTypes.Role)?.Value);
         Assert.InRange(expiresAtUtc, DateTime.UtcNow.AddMinutes(14), DateTime.UtcNow.AddMinutes(16));
     }
 }

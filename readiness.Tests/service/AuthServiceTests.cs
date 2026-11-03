@@ -19,11 +19,8 @@ public class AuthServiceTests
     [Fact]
     public async Task RegisterAsync_NewEmail_CreatesUserWithNormalizedEmailAndPasswordHash()
     {
-        var role = new Role { Id = 1, Type = RoleType.User };
         _repository.Setup(repository => repository.EmailExistsAsync("alice@example.com"))
             .ReturnsAsync(false);
-        _repository.Setup(repository => repository.GetRoleByTypeAsync(RoleType.User))
-            .ReturnsAsync(role);
         _repository.Setup(repository => repository.AddUserAsync(It.IsAny<User>()))
             .Callback<User>(user => user.Id = 42)
             .Returns(Task.CompletedTask);
@@ -36,7 +33,7 @@ public class AuthServiceTests
         Assert.Equal("alice@example.com", result.Email);
         Assert.Equal("Alice", result.Name);
         _repository.Verify(repository => repository.AddUserAsync(It.Is<User>(user =>
-            user.RoleId == role.Id &&
+            user.Role == Role.User &&
             user.PasswordHash != "Password1" &&
             _passwordHasher.VerifyHashedPassword(user, user.PasswordHash!, "Password1")
                 == PasswordVerificationResult.Success)), Times.Once);
@@ -53,7 +50,6 @@ public class AuthServiceTests
 
         Assert.Null(result);
         _repository.Verify(repository => repository.AddUserAsync(It.IsAny<User>()), Times.Never);
-        _repository.Verify(repository => repository.GetRoleByTypeAsync(It.IsAny<RoleType>()), Times.Never);
     }
 
     [Fact]
@@ -171,7 +167,7 @@ public class AuthServiceTests
     {
         var user = AUserWithPassword("CurrentPassword1");
         var originalId = user.Id;
-        var originalRoleId = user.RoleId;
+        var originalRole = user.Role;
         var originalPasswordHash = user.PasswordHash;
         _repository.Setup(repository => repository.GetUserByIdAsync(user.Id))
             .ReturnsAsync(user);
@@ -188,7 +184,7 @@ public class AuthServiceTests
         Assert.Equal("New name", result.Profile.Name);
         Assert.Equal(1995, result.Profile.YearOfBirth);
         Assert.Equal(originalId, result.Profile.Id);
-        Assert.Equal(originalRoleId, user.RoleId);
+        Assert.Equal(originalRole, user.Role);
         Assert.Equal(originalPasswordHash, user.PasswordHash);
         _repository.Verify(repository => repository.SaveChangesAsync(), Times.Once);
     }
@@ -234,8 +230,7 @@ public class AuthServiceTests
             Id = 42,
             Email = "alice@example.com",
             Name = "Alice",
-            RoleId = 1,
-            Role = new Role { Id = 1, Type = RoleType.User }
+            Role = Role.User
         };
         user.PasswordHash = _passwordHasher.HashPassword(user, password);
         return user;
