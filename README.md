@@ -68,6 +68,7 @@ dotnet reportgenerator -reports:"readiness.Tests/TestResults/**/coverage.cobertu
 
 *Note*: To run this report generator tool, you have to install it with `dotnet tool install -g dotnet-reportgenerator-globaltool`
 
+
 ### Authentication
 
 The login endpoint is `POST /api/auth/login`. JWT signing keys must not be stored in `appsettings.json` or committed to source control. For local PowerShell development, generate a temporary key in the same terminal used to start the API:

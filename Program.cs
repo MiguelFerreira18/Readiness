@@ -90,6 +90,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenRevocationRepository, TokenRevocationRepository>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

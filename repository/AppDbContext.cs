@@ -25,11 +25,7 @@ public class AppDbContext : DbContext
         .Property(u => u.Type)
         .HasConversion<string>()
         .HasMaxLength(20);
-
-        modelBuilder.Entity<Role>().HasData(
-            new Role { Id = 1, Type = RoleType.User }
-        );
-
+       
         modelBuilder.Entity<User>()
         .Property(u => u.Email)
         .HasMaxLength(254);
