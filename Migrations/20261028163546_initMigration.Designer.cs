@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace readiness.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261027152142_initMigration")]
+    [Migration("20261028163546_initMigration")]
     partial class initMigration
     {
         /// <inheritdoc />
@@ -31,11 +31,6 @@ namespace readiness.Migrations
                         .HasColumnType("bigint");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Author")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)");
 
                     b.Property<long>("Isbn")
                         .HasColumnType("bigint");
@@ -96,14 +91,13 @@ namespace readiness.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<int>("Type")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("Type")
                         .IsUnique();
 
                     b.ToTable("Categories");
@@ -112,42 +106,42 @@ namespace readiness.Migrations
                         new
                         {
                             Id = 1L,
-                            Name = "Fantasy"
+                            Type = 0
                         },
                         new
                         {
                             Id = 2L,
-                            Name = "Sci-Fi"
+                            Type = 1
                         },
                         new
                         {
                             Id = 3L,
-                            Name = "Romance"
+                            Type = 2
                         },
                         new
                         {
                             Id = 4L,
-                            Name = "Classic"
+                            Type = 3
                         },
                         new
                         {
                             Id = 5L,
-                            Name = "Adventure"
+                            Type = 4
                         },
                         new
                         {
                             Id = 6L,
-                            Name = "Historic"
+                            Type = 5
                         },
                         new
                         {
                             Id = 7L,
-                            Name = "Manga"
+                            Type = 6
                         },
                         new
                         {
                             Id = 8L,
-                            Name = "Comic"
+                            Type = 7
                         });
                 });
 
@@ -180,6 +174,9 @@ namespace readiness.Migrations
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("wasEdited")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
@@ -254,12 +251,17 @@ namespace readiness.Migrations
                     b.Property<long>("BookId")
                         .HasColumnType("bigint");
 
+                    b.Property<long>("StatusId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BookId");
+
+                    b.HasIndex("StatusId");
 
                     b.HasIndex("UserId");
 
@@ -362,6 +364,12 @@ namespace readiness.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("readiness.model.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("User", "User")
                         .WithMany("BookList")
                         .HasForeignKey("UserId")
@@ -369,6 +377,8 @@ namespace readiness.Migrations
                         .IsRequired();
 
                     b.Navigation("Book");
+
+                    b.Navigation("Status");
 
                     b.Navigation("User");
                 });

@@ -41,3 +41,30 @@ dotnet ef migrations add <name of migration> ## This creates a new migration, no
 ```bash
 dotnet ef database update ## This updates the migration on the database, it's an apply for the newly created migration, this isn't that bad to apply, but the Program.cs file already does that for us
 ```
+
+
+### Testing
+
+In order to run the tests call `dotnet test readiness.test`, this will call and run the unit tests present in that folder
+
+If you want to check the coverage report run the following command:
+```bash
+dotnet test readiness.Tests --collect:"XPlat Code Coverage" --settings readiness.Tests/coverage.runsettings
+```
+
+This will generate a "coverage.cobertura.xml" file which is not very readable, for this you can run the following command:
+
+```bash
+#Linux or git bash
+dotnet reportgenerator \
+  -reports:"readiness.Tests/TestResults/**/coverage.cobertura.xml" \
+  -targetdir:readiness.Tests/coveragereport \
+  -classfilters:"+*Service" \
+  -reporttypes:Html
+
+#Windows
+dotnet reportgenerator -reports:"readiness.Tests/TestResults/**/coverage.cobertura.xml" -targetdir:readiness.Tests/coveragereport -classfilters:"+*Service" -reporttypes:Html
+``` 
+
+*Note*: To run this report generator tool, you have to install it with `dotnet tool install -g dotnet-reportgenerator-globaltool`
+
