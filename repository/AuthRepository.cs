@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 public interface IAuthRepository
 {
     Task<bool> EmailExistsAsync(string normalizedEmail);
-    Task<Role?> GetRoleByTypeAsync(RoleType roleType);
     Task AddUserAsync(User user);
     Task<User?> GetUserByEmailAsync(string normalizedEmail);
     Task<User?> GetUserByIdAsync(long userId);
@@ -20,13 +19,8 @@ public sealed class AuthRepository : IAuthRepository
     public Task<bool> EmailExistsAsync(string normalizedEmail) =>
         _context.Users.AnyAsync(user => user.Email == normalizedEmail);
 
-    public Task<Role?> GetRoleByTypeAsync(RoleType roleType) =>
-        _context.Roles.FirstOrDefaultAsync(role => role.Type == roleType);
-
     public Task<User?> GetUserByEmailAsync(string normalizedEmail) =>
-        _context.Users
-            .Include(user => user.Role)
-            .FirstOrDefaultAsync(user => user.Email == normalizedEmail);
+        _context.Users.FirstOrDefaultAsync(user => user.Email == normalizedEmail);
 
     public Task<User?> GetUserByIdAsync(long userId) =>
         _context.Users.FirstOrDefaultAsync(user => user.Id == userId);

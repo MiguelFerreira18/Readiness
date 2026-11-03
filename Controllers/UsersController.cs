@@ -15,7 +15,6 @@ public sealed class UsersController : ControllerBase
     public UsersController(IAuthService service) => _service = service;
 
     [HttpPut("me")]
-    [ValidateAntiForgeryToken]
     public async Task<ActionResult<UserProfileResponse>> UpdateMyProfile(
         UpdateUserProfileRequest request)
     {
