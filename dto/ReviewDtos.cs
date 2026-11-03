@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations;
 public record CreateReviewRequest(
     [Required] long BookId,
     [MaxLength(4000)] string? Text,
-    [Range(1, 5)] int Star,
+    [Range(0, 5)] int Star,
     [Range(0.01, float.MaxValue)] float TimeToRead
     );
 
 public record UpdateReviewRequest(
     [MaxLength(4000)] string Text,
-    [Range(1, 5)] int Star,
+    [Range(0, 5)] int Star,
     [Range(0.01, float.MaxValue)] float TimeToRead
 );
 
