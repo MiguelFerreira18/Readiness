@@ -52,7 +52,7 @@ public class ReviewService : IReviewService
     }
 
     //TODO: After claims are done, isAdmin doens't have a default 
-    public async Task<bool> DeleteAsync(long userId, long id, bool isAdmin = true)
+    public async Task<bool> DeleteAsync(long userId, long id, bool isAdmin = false)
     {
         var review = await _repository.GetByIdAsync(id);
         if (review is null) return false;

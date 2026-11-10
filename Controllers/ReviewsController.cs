@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace readiness.Controllers;
 
 [ApiController]
 [Route("api/reviews")]
-//TODO: ADD AUTHORIZE AFTER JWT IMPLEMENTATION
+[Authorize]
 public class ReviewController : ControllerBase
 {
     private readonly IReviewService _service;
@@ -27,22 +30,43 @@ public class ReviewController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ReviewResponse>> Create(CreateReviewRequest request)
     {
-        var created = await _service.CreateAsync(request, 1L);
+        var userClaimId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        if (!long.TryParse(userClaimId, out var userId))
+        {
+            return Unauthorized(new { message = "A valid authentication token is required." });
+        }
+        var created = await _service.CreateAsync(request, userId);
         return created is null ? Conflict() : CreatedAtAction(nameof(GetById), new { id = created.id }, created);
     }
 
     [HttpPut("{id}")]
     public async Task<ActionResult<ReviewResponse>> Update(long id, UpdateReviewRequest request)
     {
-        var updated = await _service.UpdateAsync(1L, id, request);
+        var userClaimId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        if (!long.TryParse(userClaimId, out var userId))
+        {
+            return Unauthorized(new { message = "A valid authentication token is required." });
+        }
+        var updated = await _service.UpdateAsync(userId, id, request);
         return updated is null ? NotFound() : Ok(updated);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(long id)
     {
-        //TODO: BOTH 1 AND true WILL CHANGE AFTER JWT IMPLEMENTATION
-        var deleted = await _service.DeleteAsync(1L, id, true);
+        var userClaimId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        if (!long.TryParse(userClaimId, out var userId))
+        {
+            return Unauthorized(new { message = "A valid authentication token is required." });
+        }
+
+        string roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
+        if (!Enum.TryParse<Role>(roleClaim, ignoreCase: true, out var role))
+        {
+            return Forbid();
+        }
+        bool isAdmin = role == Role.Moderator;
+        var deleted = await _service.DeleteAsync(userId, id, isAdmin);
         return deleted ? NoContent() : NotFound();
     }
 }
