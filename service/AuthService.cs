@@ -42,16 +42,12 @@ public sealed class AuthService : IAuthService
             return null;
         }
 
-        var role = await _repository.GetRoleByTypeAsync(RoleType.User)
-            ?? throw new InvalidOperationException("The default user role is missing.");
-
         var user = new User
         {
             Email = normalizedEmail,
             Name = request.Name.Trim(),
             YearOfBirth = request.YearOfBirth,
-            RoleId = role.Id,
-            Role = role
+            Role = Role.User
         };
         user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
 

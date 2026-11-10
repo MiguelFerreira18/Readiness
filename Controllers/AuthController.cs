@@ -23,7 +23,6 @@ public sealed class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    [ValidateAntiForgeryToken]
     public async Task<ActionResult<LoginUserResponse>> Login(LoginRequest request)
     {
         var login = await _service.LoginAsync(request);
@@ -50,7 +49,6 @@ public sealed class AuthController : ControllerBase
 
     [HttpPost("logout")]
     [Authorize]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
         var tokenId = User.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
@@ -80,7 +78,6 @@ public sealed class AuthController : ControllerBase
 
     [HttpPost("change-password")]
     [Authorize]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
     {
         var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;

@@ -15,21 +15,16 @@ public class AppDbContext : DbContext
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<UserBook> BookLists => Set<UserBook>();
     public DbSet<AuthorBook> AuthorBooks => Set<AuthorBook>();
-    public DbSet<Role> Roles => Set<Role>();
     public DbSet<Status> Status => Set<Status>();
     public DbSet<RevokedToken> RevokedTokens => Set<RevokedToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Role>()
-        .Property(u => u.Type)
+        modelBuilder.Entity<User>()
+        .Property(u => u.Role)
         .HasConversion<string>()
         .HasMaxLength(20);
-
-        modelBuilder.Entity<Role>().HasData(
-            new Role { Id = 1, Type = RoleType.User }
-        );
-
+       
         modelBuilder.Entity<User>()
         .Property(u => u.Email)
         .HasMaxLength(254);

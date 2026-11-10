@@ -64,30 +64,20 @@ dotnet reportgenerator \
 
 #Windows
 dotnet reportgenerator -reports:"readiness.Tests/TestResults/**/coverage.cobertura.xml" -targetdir:readiness.Tests/coveragereport -classfilters:"+*Service" -reporttypes:Html
-``` 
-
-*Note*: To run this report generator tool, you have to install it with `dotnet tool install -g dotnet-reportgenerator-globaltool`
-
-### Authentication
-
-The login endpoint is `POST /api/auth/login`. JWT signing keys must not be stored in `appsettings.json` or committed to source control. For local PowerShell development, generate a temporary key in the same terminal used to start the API:
-
-```powershell
-$rng = [Security.Cryptography.RandomNumberGenerator]::Create()
-$bytes = New-Object byte[] 32
-$rng.GetBytes($bytes)
-$rng.Dispose()
-
-$env:Jwt__SigningKey = [Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
-dotnet run
 ```
 
-The JWT expires after 15 minutes by default. It is returned only in the `readiness_auth` cookie (`HttpOnly`, `Secure`, `SameSite=Strict`); the login response contains the user's public profile, not the token.
+**Note**: To run this report generator tool, you have to install it with `dotnet tool install -g dotnet-reportgenerator-globaltool`
 
-Because browsers attach cookies automatically, browser clients must first call `GET /api/auth/csrf-token`, retain the returned `token`, and send it as the `X-CSRF-TOKEN` header on `POST /api/auth/login` and `POST /api/auth/logout`. Future authenticated state-changing endpoints must use the same anti-forgery validation. Run the API over HTTPS, as the authentication and anti-forgery cookies are marked `Secure`.
+### Authentication
+To have the auth functioning you are going to have to use the jwt Key found at the root of the project at ./.env.template,
+because this is not a .env file of it self you have to change it to just '.env', by simply removing the '.template' part.
+You can do this by renaming or doing this on the terminal `cp .env.template .env`.
 
-`POST /api/auth/logout` requires a valid JWT cookie and anti-forgery token. It stores the JWT's `jti` in the `RevokedTokens` table until its expiration and clears the browser cookie. The authentication middleware checks this table for each authenticated request, so revocation remains effective after application restarts and across API instances. Apply the pending EF Core migration before using login/logout. Logout without a valid token returns `401 Unauthorized`.
+**Note**: even though you should remove the '.template' part of the file, you should always leave at least one '.env.template' file
+on the project root so other people can use it fo them selfs.
 
-`POST /api/auth/change-password` requires the current password, a new password following the registration rules, a valid JWT cookie, and an anti-forgery token. The user ID is read from the token's `sub` claim; clients must not send a user ID. On success, the new password is stored as a password hash.
+### Paths
+To check the available paths check the following url: `http://localhost:5000/swagger/index.html`
 
-`PUT /api/users/me` updates the authenticated user's email, name, and year of birth. It requires a valid JWT cookie and anti-forgery token. The user ID comes from the JWT `sub` claim; the request cannot change the user ID, role, or password hash. Email addresses must be unique.
+If you want to use Postman check the following url: `http://localhost:5000/openapi/v1.json`
+Download that JSON and import it onto Postman
