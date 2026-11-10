@@ -22,6 +22,6 @@ public class UserService
     public async Task<bool> IsUserModerator(long userId)
     {
         User user = await _repository.GetUserByIdAsync(userId);
-        return user.Role.Equals(RoleType.Moderator);
+        return user.Role.Equals(Role.Moderator);
     }
 }
