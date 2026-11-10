@@ -4,3 +4,59 @@ GET {{readiness_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+POST {{readiness_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "reader@example.com",
+  "name": "Reader",
+  "yearOfBirth": 1990,
+  "password": "Password1"
+}
+
+###
+
+GET {{readiness_HostAddress}}/api/auth/csrf-token
+Accept: application/json
+
+###
+
+POST {{readiness_HostAddress}}/api/auth/login
+Content-Type: application/json
+X-CSRF-TOKEN: <token returned by the csrf-token endpoint>
+
+{
+  "email": "reader@example.com",
+  "password": "Password1"
+}
+
+###
+
+POST {{readiness_HostAddress}}/api/auth/logout
+X-CSRF-TOKEN: <token returned by the csrf-token endpoint>
+
+###
+
+POST {{readiness_HostAddress}}/api/auth/change-password
+Content-Type: application/json
+X-CSRF-TOKEN: <token returned by the csrf-token endpoint>
+
+{
+  "currentPassword": "Password1",
+  "newPassword": "NewPassword2"
+}
+
+###
+
+PUT {{readiness_HostAddress}}/api/users/me
+Content-Type: application/json
+X-CSRF-TOKEN: <token returned by the csrf-token endpoint>
+
+{
+  "email": "reader.updated@example.com",
+  "name": "Reader Updated",
+  "yearOfBirth": 1992
+}
+
+###

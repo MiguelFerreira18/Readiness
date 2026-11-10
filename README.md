@@ -64,7 +64,20 @@ dotnet reportgenerator \
 
 #Windows
 dotnet reportgenerator -reports:"readiness.Tests/TestResults/**/coverage.cobertura.xml" -targetdir:readiness.Tests/coveragereport -classfilters:"+*Service" -reporttypes:Html
-``` 
+```
 
-*Note*: To run this report generator tool, you have to install it with `dotnet tool install -g dotnet-reportgenerator-globaltool`
+**Note**: To run this report generator tool, you have to install it with `dotnet tool install -g dotnet-reportgenerator-globaltool`
 
+### Authentication
+To have the auth functioning you are going to have to use the jwt Key found at the root of the project at ./.env.template,
+because this is not a .env file of it self you have to change it to just '.env', by simply removing the '.template' part.
+You can do this by renaming or doing this on the terminal `cp .env.template .env`.
+
+**Note**: even though you should remove the '.template' part of the file, you should always leave at least one '.env.template' file
+on the project root so other people can use it fo them selfs.
+
+### Paths
+To check the available paths check the following url: `http://localhost:5000/swagger/index.html`
+
+If you want to use Postman check the following url: `http://localhost:5000/openapi/v1.json`
+Download that JSON and import it onto Postman

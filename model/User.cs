@@ -6,24 +6,21 @@ public class User
 {
     [Key]
     public long Id { get; set; }
-    
-    [Required, EmailAddress(ErrorMessage = "Invalid Email"),]
+
+    [Required, EmailAddress(ErrorMessage = "Invalid Email"), MaxLength(254)]
     public string? Email { get; set; }
-    
+
     [Required, MaxLength(64)]
     public string? Name { get; set; }
-    
+
     [Range(0, 2027, ErrorMessage = "Enter a valid year between 0 and 2027")]
     public int YearOfBirth { get; set; }
-    
+
     [Required, MaxLength(64)]
     public string? PasswordHash { get; set; }
-    
-    [Required] 
-    public long RoleId { get; set; }
-    [ForeignKey(nameof(RoleId))]
-    public Role Role { get; set; }  = null!;
+
+    public Role Role { get; set; }
 
     public virtual List<Review> Reviews { get; set; } = new();
-    public List<UserBook> BookList { get; set; } = new(); 
+    public List<UserBook> BookList { get; set; } = new();
 }
