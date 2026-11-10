@@ -28,14 +28,6 @@ if (string.IsNullOrWhiteSpace(jwtSettings.Issuer) ||
 
 builder.Services.AddSingleton(jwtSettings);
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
-builder.Services.AddAntiforgery(options =>
-{
-    options.HeaderName = "X-CSRF-TOKEN";
-    options.Cookie.Name = "readiness_csrf";
-    options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.SameSite = SameSiteMode.Strict;
-});
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

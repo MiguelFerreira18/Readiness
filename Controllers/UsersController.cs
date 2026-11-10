@@ -16,7 +16,7 @@ public sealed class UsersController : ControllerBase
 
     [HttpPut("me")]
     [ValidateAntiForgeryToken]
-    public async Task<ActionResult<UserProfileResponse>> UpdateMyProfile(
+    public async Task<ActionResult<LoginUserProfileResponse>> UpdateMyProfile(
         UpdateUserProfileRequest request)
     {
         var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;

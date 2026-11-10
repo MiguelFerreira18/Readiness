@@ -23,7 +23,7 @@ public sealed record LoginRequest(
     [property: Required, StringLength(64, MinimumLength = 1)] string Password
 );
 
-public sealed record AuthenticatedUserResponse(
+public sealed record LoginUserResponse(
     long Id,
     string Email,
     string Name
@@ -44,9 +44,20 @@ public sealed record UpdateUserProfileRequest(
     [property: Range(0, 2027)] int YearOfBirth
 );
 
-public sealed record UserProfileResponse(
+public sealed record LoginUserProfileResponse(
     long Id,
     string Email,
     string Name,
     int YearOfBirth
+);
+
+public sealed record UpdateUserProfileResult(
+    UserProfileUpdateStatus Status,
+    LoginUserProfileResponse? Profile
+);
+
+public sealed record LoginResult(
+    string Token,
+    DateTime ExpiresAtUtc,
+    LoginUserResponse User
 );

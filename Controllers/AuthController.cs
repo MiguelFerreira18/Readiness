@@ -13,14 +13,6 @@ public sealed class AuthController : ControllerBase
 
     public AuthController(IAuthService service) => _service = service;
 
-    [HttpGet("csrf-token")]
-    [IgnoreAntiforgeryToken]
-    public IActionResult GetCsrfToken([FromServices] IAntiforgery antiforgery)
-    {
-        var tokens = antiforgery.GetAndStoreTokens(HttpContext);
-        return Ok(new { token = tokens.RequestToken });
-    }
-
     [HttpPost("register")]
     public async Task<ActionResult<RegisteredUserResponse>> Register(RegisterRequest request)
     {
@@ -32,7 +24,7 @@ public sealed class AuthController : ControllerBase
 
     [HttpPost("login")]
     [ValidateAntiForgeryToken]
-    public async Task<ActionResult<AuthenticatedUserResponse>> Login(LoginRequest request)
+    public async Task<ActionResult<LoginUserResponse>> Login(LoginRequest request)
     {
         var login = await _service.LoginAsync(request);
         if (login is null)

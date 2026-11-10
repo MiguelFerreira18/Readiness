@@ -95,7 +95,7 @@ public sealed class AuthService : IAuthService
         return new LoginResult(
             token.Value,
             token.ExpiresAtUtc,
-            new AuthenticatedUserResponse(user.Id, user.Email!, user.Name!)
+            new LoginUserResponse(user.Id, user.Email!, user.Name!)
         );
     }
 
@@ -157,34 +157,9 @@ public sealed class AuthService : IAuthService
 
         return new UpdateUserProfileResult(
             UserProfileUpdateStatus.Success,
-            new UserProfileResponse(user.Id, user.Email!, user.Name!, user.YearOfBirth));
+            new LoginUserProfileResponse(user.Id, user.Email!, user.Name!, user.YearOfBirth));
     }
 
     private static bool IsDuplicateKey(DbUpdateException exception) =>
         exception.InnerException is MySqlException { Number: 1062 };
 }
-
-public enum ChangePasswordResult
-{
-    Success,
-    UserNotFound,
-    InvalidCurrentPassword
-}
-
-public enum UserProfileUpdateStatus
-{
-    Success,
-    UserNotFound,
-    EmailAlreadyInUse
-}
-
-public sealed record UpdateUserProfileResult(
-    UserProfileUpdateStatus Status,
-    UserProfileResponse? Profile
-);
-
-public sealed record LoginResult(
-    string Token,
-    DateTime ExpiresAtUtc,
-    AuthenticatedUserResponse User
-);
