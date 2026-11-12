@@ -32,6 +32,15 @@ public class ReviewServiceTests
         DateTime? dateOfReview = null) =>
         new(id, text, star, bookId, timeToRead, userName, dateOfReview ?? new DateTime(2026, 1, 1));
 
+    private static ReviewFilter AFilter(
+        float? TimeToReadStart = 1f,
+        float? TimeToReadFinish = 3f,
+        DateTime? DateOfReviewStart = null,
+        DateTime? DateOfReviewFinish = null,
+        int? StarStart = 1,
+        int? StartFinish = 5
+    ) => new(TimeToReadStart, TimeToReadFinish, DateOfReviewStart, DateOfReviewFinish, StarStart, StartFinish);
+
     [Fact]
     public async Task CreateAsync_UserAlreadyReviewdBook_ReturnsNullAndDoesNotAdd()
     {
@@ -72,13 +81,187 @@ public class ReviewServiceTests
             AResponse(id: 2L, star:3),
             AResponse(id: 3L, userName: "other")
         };
-        _repo.Setup(r => r.GetAllReviewEsponseAsync())
+        _repo.Setup(r => r.GetAllReviewResponseAsync())
         .ReturnsAsync(response);
 
-        var result = await _sut.GetAllAsync();
+        var result = await _sut.GetAllAsync(null);
 
         Assert.Same(response, result);
         Assert.Equal(3, result.Count);
+    }
+
+    [Fact]
+    public async Task GetAllAsync_WithAllOpenFilters_ReturnsFilteredRepository()
+    {
+        var response = new List<ReviewResponse>{
+            AResponse(),
+            AResponse(id: 2L, star:3),
+            AResponse(id: 3L, userName: "other")
+        };
+        var filter = AFilter();
+        _repo.Setup(r => r.GetAllReviewResponseAsync())
+        .ReturnsAsync(response);
+
+        var result = await _sut.GetAllAsync(filter);
+
+        Assert.Equal(response, result);
+        Assert.Equal(3, result.Count);
+    }
+
+    [Fact]
+    public async Task GetAllAsync_WithinTimeToReadStart_ReturnsListWithOneElement()
+    {
+        var response = new List<ReviewResponse>{
+            AResponse(),
+            AResponse(id: 2L, star:3),
+            AResponse(id: 3L, userName: "other", timeToRead: 29f),
+            AResponse(id: 4L, timeToRead: 35f)
+        };
+        var expectedResponse = new List<ReviewResponse> {
+            response[3]
+        };
+        var filter = AFilter(30, null, null, null, null, null);
+        _repo.Setup(r => r.GetAllReviewResponseAsync())
+        .ReturnsAsync(response);
+
+        var result = await _sut.GetAllAsync(filter);
+
+        Assert.NotSame(response, result);
+        Assert.Equal(expectedResponse, result);
+        Assert.Equal(expectedResponse.Count, result.Count);
+    }
+
+    [Fact]
+    public async Task GetAllAsync_WithinTimeToReadFinish_ReturnsListWithThreeElements()
+    {
+        var response = new List<ReviewResponse>{
+            AResponse(),
+            AResponse(id: 2L, star:3),
+            AResponse(id: 3L, userName: "other", timeToRead: 29f),
+            AResponse(id: 4L, timeToRead: 35f)
+        };
+        var expectedResponse = new List<ReviewResponse> {
+            response[0],
+            response[1],
+            response[2]
+        };
+        var filter = AFilter(null, 30, null, null, null, null);
+        _repo.Setup(r => r.GetAllReviewResponseAsync())
+        .ReturnsAsync(response);
+
+        var result = await _sut.GetAllAsync(filter);
+
+        Assert.NotSame(response, result);
+        Assert.Equal(expectedResponse, result);
+        Assert.Equal(expectedResponse.Count, result.Count);
+    }
+
+    [Fact]
+    public async Task GetAllAsync_withinDateOfReviewStart_ReturnsListWithThreeElements()
+    {
+        var response = new List<ReviewResponse>{
+            AResponse(),
+            AResponse(id: 2L, star:3),
+            AResponse(id: 3L, userName: "other", dateOfReview: new DateTime(2026,02,1)),
+            AResponse(id: 4L, dateOfReview: new DateTime(2026,03,31))
+        };
+        var expectedResponse = new List<ReviewResponse> {
+            response[2],
+            response[3],
+        };
+        var filter = AFilter(null, null, new DateTime(2026, 01, 31), null, null, null);
+        _repo.Setup(r => r.GetAllReviewResponseAsync())
+        .ReturnsAsync(response);
+
+        var result = await _sut.GetAllAsync(filter);
+
+        Assert.NotSame(response, result);
+        Assert.Equal(expectedResponse, result);
+        Assert.Equal(expectedResponse.Count, result.Count);
+    }
+
+    [Fact]
+    public async Task GetAllAsync_withinDateOfReviewFinish_ReturnsListWithThreeElements()
+    {
+        var response = new List<ReviewResponse>{
+            AResponse(),
+            AResponse(id: 2L, star:3),
+            AResponse(id: 3L, userName: "other", dateOfReview: new DateTime(2026,02,1)),
+            AResponse(id: 4L, dateOfReview: new DateTime(2026,03,31))
+        };
+        var expectedResponse = new List<ReviewResponse> {
+            response[0],
+            response[1],
+            response[2]
+        };
+        var filter = AFilter(null, null, null, new DateTime(2026, 03, 15), null, null);
+        _repo.Setup(r => r.GetAllReviewResponseAsync())
+        .ReturnsAsync(response);
+
+        var result = await _sut.GetAllAsync(filter);
+
+        Assert.NotSame(response, result);
+        Assert.Equal(expectedResponse, result);
+        Assert.Equal(expectedResponse.Count, result.Count);
+    }
+
+    [Fact]
+    public async Task GetAllAsync_WithinStarStart_ReturnsListWithThreeElements()
+    {
+        var response = new List<ReviewResponse>{
+            AResponse(),
+            AResponse(id: 2L, star:3),
+            AResponse(id: 3L, userName: "other"),
+            AResponse(id: 4L, star: 1),
+            AResponse(id: 5L, star: 2),
+            AResponse(id: 6L, star: 3),
+            AResponse(id: 7L, star: 4)
+        };
+        var expectedResponse = new List<ReviewResponse> {
+            response[0],
+            response[1],
+            response[2],
+            response[5],
+            response[6]
+        };
+        var filter = AFilter(null, null, null, null, 3, null);
+        _repo.Setup(r => r.GetAllReviewResponseAsync())
+        .ReturnsAsync(response);
+
+        var result = await _sut.GetAllAsync(filter);
+
+        Assert.NotSame(response, result);
+        Assert.Equal(expectedResponse, result);
+        Assert.Equal(expectedResponse.Count, result.Count);
+    }
+
+    [Fact]
+    public async Task GetAllAsync_WithinStarFinish_ReturnsListWithFourElements()
+    {
+        var response = new List<ReviewResponse>{
+            AResponse(),
+            AResponse(id: 2L, star:3),
+            AResponse(id: 3L, userName: "other"),
+            AResponse(id: 4L, star: 1),
+            AResponse(id: 5L, star: 2),
+            AResponse(id: 6L, star: 3),
+            AResponse(id: 7L, star: 4)
+        };
+        var expectedResponse = new List<ReviewResponse> {
+            response[1],
+            response[3],
+            response[4],
+            response[5],
+        };
+        var filter = AFilter(null, null, null, null, null, 3);
+        _repo.Setup(r => r.GetAllReviewResponseAsync())
+        .ReturnsAsync(response);
+
+        var result = await _sut.GetAllAsync(filter);
+
+        Assert.NotSame(response, result);
+        Assert.Equal(expectedResponse, result);
+        Assert.Equal(expectedResponse.Count, result.Count);
     }
 
     [Fact]
