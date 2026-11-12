@@ -14,9 +14,9 @@ public class ReviewController : ControllerBase
     public ReviewController(IReviewService service) => _service = service;
 
     [HttpGet]
-    public async Task<ActionResult<List<ReviewResponse>>> GetAll()
+    public async Task<ActionResult<List<ReviewResponse>>> GetAll([FromQuery] ReviewFilter? filter)
     {
-        var reviews = await _service.GetAllAsync();
+        var reviews = await _service.GetAllAsync(filter);
         return Ok(reviews);
     }
 
