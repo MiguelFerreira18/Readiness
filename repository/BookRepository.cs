@@ -1,24 +1,36 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using readiness.model;
 
 namespace readiness.repository;
 
 public class BookRepository
 {
-    // 1. Listas para guardar os dados em memória
-    private List<Book> _books = new List<Book>();
+    private readonly AppDbContext _context;
+
+    // Listas para gerir os estados (Desejo, Lido, Para Ler)
+
     private List<Book> _wishes = new List<Book>();
     private List<Book> _readBooks = new List<Book>();
     private List<Book> _toReadBooks = new List<Book>();
 
+    // O construtor recebe a ligação à base de dados
+    public BookRepository(AppDbContext context)
+    {
+        _context = context;
+    }
+
     // ==========================================
-    // GERIR LIVROS (Biblioteca Principal)
+    // GERIR LIVROS (Ligado à Base de Dados)
     // ==========================================
+
     public void AddBook(Book newBook)
     {
         if (newBook != null)
         {
-            _books.Add(newBook);
+            _context.Books.Add(newBook);
+            _context.SaveChanges(); // Guarda na BD
         }
     }
 
@@ -26,18 +38,21 @@ public class BookRepository
     {
         if (bookToRemove != null)
         {
-            _books.Remove(bookToRemove);
+            _context.Books.Remove(bookToRemove);
+            _context.SaveChanges(); // Remove da BD
         }
     }
 
     public List<Book> GetAllBooks()
     {
-        return _books;
+        return _context.Books.ToList(); // Busca da BD
     }
 
     // ==========================================
-    // GERIR DESEJOS (Wishes)
+    // GERIR ESTADOS
     // ==========================================
+
+    // Desejos (Wishes)
     public void AddWish(Book book)
     {
         if (book != null && !_wishes.Contains(book))
@@ -59,9 +74,7 @@ public class BookRepository
         return _wishes;
     }
 
-    // ==========================================
-    // GERIR LIVROS LIDOS (Read)
-    // ==========================================
+    // Lidos (Read)
     public void MarkAsRead(Book book)
     {
         if (book != null && !_readBooks.Contains(book))
@@ -83,9 +96,7 @@ public class BookRepository
         return _readBooks;
     }
 
-    // ==========================================
-    // GERIR LIVROS PARA LER (To Read)
-    // ==========================================
+    // Para Ler (To Read)
     public void MarkAsToRead(Book book)
     {
         if (book != null && !_toReadBooks.Contains(book))
