@@ -7,22 +7,12 @@ erDiagram
         User ||--o{ Review : ""
         Book ||--o{ Review : "" 
         Book ||--|{ BookCategory : ""
-        Category ||--|{ BookCategory : ""
         Book ||--o{ AuthorBook : ""
         User |o--o{ AuthorBook : ""
         User ||--o{ UserBook : ""
         Book |o--o{ UserBook : ""
-        Status ||--|{ UserBook : ""
 
         Role{
-          Long id PK
-          String type UK 
-        }
-        Category{
-          Long id PK
-          String type UK 
-        }
-        Status {
           Long id PK
           String type UK 
         }
@@ -57,15 +47,14 @@ erDiagram
         BookCategory{
           Long id PK
           Long bookId FK
-          Long categoryId FK
+          String category
         }
         UserBook{
           Long id PK
           Long bookId FK
           Long userId FK
-          Long statusId FK
+          String status
         }
-
         AuthorBook {
           Long id PK
           Long userId FK
