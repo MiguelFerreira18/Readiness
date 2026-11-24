@@ -27,4 +27,5 @@ public class Book
 
     public virtual List<BookCategory> BookCategories { get; set; } = new();
     public virtual List<Review> Reviews { get; set; } = new();
+    public virtual List<UserBook> UserBooks { get; set; } = new();
 }

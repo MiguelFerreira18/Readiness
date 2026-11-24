@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
+
 
 [Table("User")]
 public class User
@@ -23,4 +25,5 @@ public class User
 
     public virtual List<Review> Reviews { get; set; } = new();
     public List<UserBook> BookList { get; set; } = new();
+    public virtual List<UserBook> UserBooks { get; set; } = new();
 }

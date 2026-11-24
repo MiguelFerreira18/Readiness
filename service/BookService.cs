@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using readiness.model;
 using readiness.repository;
 
@@ -6,81 +7,78 @@ namespace readiness.service;
 
 public class BookService
 {
-    // O Service precisa do Repositório para conseguir guardar e buscar dados
     private readonly BookRepository _bookRepository;
 
-    // Construtor: recebe o repositório automaticamente
     public BookService(BookRepository bookRepository)
     {
         _bookRepository = bookRepository;
     }
 
-    // --- GERIR BIBLIOTECA ---
+    // --- BIBLIOTECA GERAL ---
 
-    public void AddBook(Book newBook)
+    public async Task AddBookAsync(Book newBook)
     {
-
-        _bookRepository.AddBook(newBook);
+        await _bookRepository.AddBookAsync(newBook);
     }
 
-    public void RemoveBook(Book bookToRemove)
+    public async Task RemoveBookAsync(Book bookToRemove)
     {
-        _bookRepository.RemoveBook(bookToRemove);
+        await _bookRepository.RemoveBookAsync(bookToRemove);
     }
 
-    public List<Book> GetAllBooks()
+    public async Task<List<Book>> GetAllBooksAsync()
     {
-        return _bookRepository.GetAllBooks();
+        return await _bookRepository.GetAllBooksAsync();
     }
 
-    // --- GERIR DESEJOS (WISHES) ---
+    // --- DESEJOS (WISHES) ---
 
-    public void AddWish(Book book)
+    public async Task AddWishAsync(long userId, long bookId)
     {
-        _bookRepository.AddWish(book);
+        await _bookRepository.SetBookStatusAsync(userId, bookId, ReadingStatus.Wish);
     }
 
-    public void RemoveWish(Book book)
+    public async Task RemoveWishAsync(long userId, long bookId)
     {
-        _bookRepository.RemoveWish(book);
+        await _bookRepository.RemoveBookStatusAsync(userId, bookId, ReadingStatus.Wish);
     }
 
-    public List<Book> GetAllWishes()
+    public async Task<List<Book>> GetAllWishesAsync(long userId)
     {
-        return _bookRepository.GetAllWishes();
+        return await _bookRepository.GetBooksByStatusAsync(userId, ReadingStatus.Wish);
     }
 
-    // --- GERIR LIVROS LIDOS (READ) ---
+    // --- LIVROS LIDOS (READ) ---
 
-    public void MarkAsRead(Book book)
+    public async Task MarkAsReadAsync(long userId, long bookId)
     {
-        _bookRepository.MarkAsRead(book);
+        await _bookRepository.SetBookStatusAsync(userId, bookId, ReadingStatus.Read);
     }
 
-    public void RemoveFromRead(Book book)
+    public async Task RemoveFromReadAsync(long userId, long bookId)
     {
-        _bookRepository.RemoveFromRead(book);
+        await _bookRepository.RemoveBookStatusAsync(userId, bookId, ReadingStatus.Read);
     }
 
-    public List<Book> GetAllReadBooks()
+    public async Task<List<Book>> GetAllReadBooksAsync(long userId)
     {
-        return _bookRepository.GetAllReadBooks();
+        return await _bookRepository.GetBooksByStatusAsync(userId, ReadingStatus.Read);
     }
 
-    // --- GERIR LIVROS PARA LER (TO READ) ---
+    // --- LIVROS PARA LER (TO READ) ---
 
-    public void MarkAsToRead(Book book)
+    public async Task MarkAsToReadAsync(long userId, long bookId)
     {
-        _bookRepository.MarkAsToRead(book);
+        await _bookRepository.SetBookStatusAsync(userId, bookId, ReadingStatus.ToRead);
     }
 
-    public void RemoveFromToRead(Book book)
+    public async Task RemoveFromToReadAsync(long userId, long bookId)
     {
-        _bookRepository.RemoveFromToRead(book);
+        await _bookRepository.RemoveBookStatusAsync(userId, bookId, ReadingStatus.ToRead);
     }
 
-    public List<Book> GetAllToReadBooks()
+    public async Task<List<Book>> GetAllToReadBooksAsync(long userId)
     {
-        return _bookRepository.GetAllToReadBooks();
+        return await _bookRepository.GetBooksByStatusAsync(userId, ReadingStatus.ToRead);
     }
 }
