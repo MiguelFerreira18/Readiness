@@ -288,8 +288,9 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 
-./Migrations*
+./Migrations/*
 ./Migrations
+Migrations
 
 
 ./readiness.Tests/obj
@@ -297,3 +298,6 @@ __pycache__/
 
 TestResults/
 coveragereport/
+
+cookies.txt
+./cookies.txt

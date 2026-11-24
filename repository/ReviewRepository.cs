@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 public interface IReviewRepository
 {
-    public Task<List<ReviewResponse>> GetAllReviewEsponseAsync();
+    public Task<List<ReviewResponse>> GetAllReviewResponseAsync();
     public Task<ReviewResponse?> GetReviewResponseByIdAsync(long id);
     public Task<Review?> GetReviewByBookIdAndUserIdAsync(long bookId, long userId);
     public Task<Review?> GetByIdAsync(long id);
@@ -16,7 +16,7 @@ public class ReviewRepository : IReviewRepository
     private readonly AppDbContext _context;
     public ReviewRepository(AppDbContext context) => _context = context;
 
-    public Task<List<ReviewResponse>> GetAllReviewEsponseAsync()
+    public Task<List<ReviewResponse>> GetAllReviewResponseAsync()
     => _context.Reviews
     .ProjectToResponse()
     .AsNoTracking()
