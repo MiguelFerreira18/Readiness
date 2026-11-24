@@ -31,5 +31,5 @@ public record BookResponse(
     int YearOfRelease,
     int NumberOfPage,
     long Isbn,
-    List<string>? Categories
+    List<long>? CategoryIds
 );

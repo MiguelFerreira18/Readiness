@@ -11,7 +11,7 @@ public static class BookMapper
         book.YearOfRelease,
         book.NumberOfPage,
         book.Isbn,
-        book.BookCategories?.Select(bc => bc.Category.Type.ToString()).ToList());
+        null); //TODO: Correct
 
     public static Book ToEntity(this CreateBookRequest request) => new()
     {
@@ -33,6 +33,6 @@ public static class BookMapper
             b.YearOfRelease,
             b.NumberOfPage,
             b.Isbn,
-            b.BookCategories.Select(bc => bc.Category.Type.ToString()).ToList()
+            null //TODO: Correct
         ));
 }
