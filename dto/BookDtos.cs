@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-//TODO:DELETE ON MERGE SINCE THIS IS A MOCK UP
-
 public record CreateBookRequest(
     [Required, MaxLength(255)]
     string Name,
@@ -20,7 +18,7 @@ public record CreateBookRequest(
     [Required]
     long Isbn,
 
-    List<long>? CategoryIds
+    List<String>? Categories
 );
 
 public record BookResponse(
@@ -31,5 +29,5 @@ public record BookResponse(
     int YearOfRelease,
     int NumberOfPage,
     long Isbn,
-    List<long>? CategoryIds
+    List<String>? Categories
 );

@@ -23,6 +23,8 @@ public class Book
     [Required]
     public long Isbn { get; set; }
 
-    public virtual List<BookCategory> BookCategories { get; set; } = new();
+    public virtual List<BookCategory> Categories { get; set; } = new();
     public virtual List<Review> Reviews { get; set; } = new();
+    //public ICollection<AuthorBook> AuthorBooks { get; set; } = new List<AuthorBook>();
+    //public ICollection<UserBook> UserBooks { get; set; } = new List<UserBook>();
 }

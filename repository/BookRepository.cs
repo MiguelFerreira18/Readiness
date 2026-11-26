@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-
-//TODO:DELETE ON MERGE SINCE THIS IS A MOCK UP
 public interface IBookRepository
 {
     public Task<Book> AddAsync(Book book);
     public Task<BookResponse> GetBookByIdAsync(long id);
+    public Task<bool> ExistsByIsbnAsync(long isbn);
 }
 
 
@@ -27,5 +26,10 @@ public class BookRepository
         _context.Books.Add(book);
         await _context.SaveChangesAsync();
         return book;
+    }
+
+    public Task<bool> ExistsByIsbnAsync(long isbn)
+    {
+        return _context.Books.AnyAsync(b => b.Isbn == isbn);
     }
 }

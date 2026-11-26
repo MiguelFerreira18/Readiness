@@ -65,7 +65,7 @@ public class ReviewController : ControllerBase
         {
             return Forbid();
         }
-        bool isAdmin = role == Role.Moderator;
+        bool isAdmin = role == Role.Administrator;
         var deleted = await _service.DeleteAsync(userId, id, isAdmin);
         return deleted ? NoContent() : NotFound();
     }

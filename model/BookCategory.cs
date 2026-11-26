@@ -9,13 +9,10 @@ public class BookCategory
 
     [Required]
     public long BookId { get; set; }
-
-    [ForeignKey(nameof(BookId))]
-    public Book Book { get; set; } = null!;
-
+    
     [Required]
-    public long CategoryId { get; set; }
+    public CategoryType Category { get; set; }
 
-    [ForeignKey(nameof(CategoryId))]
-    public Category Category { get; set; } = null!;
+    [ForeignKey("BookId")]
+    public Book Book { get; set; } = null!;
 }

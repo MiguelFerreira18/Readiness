@@ -1,4 +1,4 @@
-﻿namespace readiness.repository;
+﻿/*namespace readiness.repository;
 
 //TODO:DELETE ON MERGE SINCE THIS IS A MOCK UP
 
@@ -10,4 +10,4 @@ public interface IUserRepository
 public class UserRepository
 {
     
-}
+}*/

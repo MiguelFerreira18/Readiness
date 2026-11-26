@@ -1,7 +1,4 @@
-﻿//TODO:DELETE ON MERGE SINCE THIS IS A MOCK UP
-
-
-public static class BookMapper
+﻿public static class BookMapper
 {
     public static BookResponse ToResponse(this Book book) => new(
         book.Id,
@@ -11,7 +8,7 @@ public static class BookMapper
         book.YearOfRelease,
         book.NumberOfPage,
         book.Isbn,
-        null); //TODO: Correct
+        book.Categories?.Select(c => c.Category.ToString()).ToList());
 
     public static Book ToEntity(this CreateBookRequest request) => new()
     {
@@ -33,6 +30,7 @@ public static class BookMapper
             b.YearOfRelease,
             b.NumberOfPage,
             b.Isbn,
-            null //TODO: Correct
-        ));
+            b.Categories.Select(c => c.Category.ToString()).ToList()
+            ));
+        
 }
