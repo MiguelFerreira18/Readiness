@@ -19,7 +19,9 @@ sh ./run.sh -d | --d | docker
 ```bash
 # First execute the docker container
 docker compose up -d # -d = detach, it simply doens't put you into a console
-# Secondly just run the dotnet API, you can either run from the editor itself, or use the cli as follows
+# Secondly create the migrations for the database
+dotnet ef migrations add initMigration
+# Thirdly just run the dotnet API, you can either run from the editor itself, or use the cli as follows
 dotnet run # If only for debug purposes run 'dotnet build', it WON'T apply the migrations
 ```
 
@@ -28,12 +30,12 @@ Simply run:
 ```bash
 docker compose down
 ```
-This will remove the container, but keep the images stored locally to be used another time.
+This will remove the container, but keeps the images stored locally to be used another time.
 Afterwards, you can simply re-run the program as specified before and you will have a clean db
 
 ### Precautions
+The Migrations folder does not go into git, because of that you will have to generate them whenever you change to another branch. The following commands will aid you in case you need to create a migration and apply a newly created one.
 
-**DO NOT** run the following commands unless really necessary, and you should warn other people.
 ```bash
 dotnet ef migrations add <name of migration> ## This creates a new migration, normally they are done when there are changes on the entities for the database
 ```
@@ -41,8 +43,6 @@ dotnet ef migrations add <name of migration> ## This creates a new migration, no
 ```bash
 dotnet ef database update ## This updates the migration on the database, it's an apply for the newly created migration, this isn't that bad to apply, but the Program.cs file already does that for us
 ```
-
-
 ### Testing
 
 In order to run the tests call `dotnet test readiness.test`, this will call and run the unit tests present in that folder
