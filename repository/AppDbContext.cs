@@ -13,9 +13,9 @@ public class AppDbContext : DbContext
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<BookCategory> BookCategories => Set<BookCategory>();
     public DbSet<Review> Reviews => Set<Review>();
-    public DbSet<UserBook> BookLists => Set<UserBook>();
+    public DbSet<UserBook> UserBooks => Set<UserBook>();
     public DbSet<AuthorBook> AuthorBooks => Set<AuthorBook>();
-    public DbSet<Status> Status => Set<Status>();
+
     public DbSet<RevokedToken> RevokedTokens => Set<RevokedToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

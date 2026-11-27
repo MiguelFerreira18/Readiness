@@ -1,27 +1,20 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using readiness.model;
+namespace readiness.model;
 
 public class UserBook
 {
-    [Key]
+    // Chave primária desta tabela de ligação
     public long Id { get; set; }
 
-    [Required]
-    public long BookId { get; set; }
+    // 1. Ligação ao Utilizador
 
-    [ForeignKey(nameof(BookId))]
-    public Book Book { get; set; } = null!;
-    
-    [Required]
     public long UserId { get; set; }
+    public virtual User User { get; set; } = null!;
 
-    [ForeignKey(nameof(UserId))]
-    public User User { get; set; } = null!;
-    
-    [Required]
-    public long StatusId { get; set; }
+    // 2. Ligação ao Livro
+    public long BookId { get; set; }
+    public virtual Book Book { get; set; } = null!;
 
-    [ForeignKey(nameof(StatusId))]
-    public Status Status { get; set; } = null!;
+    // 3. O Estado do livro
+
+    public ReadingStatus Status { get; set; }
 }
